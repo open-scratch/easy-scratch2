@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="common">
+    <!--
+     The git command must be available on the system path.
+     For Windows users using "git for Windows" this means selecting either
+     "Use Git from the Windows Command Prompt" or "Use Git and optional Unix tools from the Windows Command Prompt"
+     while installing.
+     -->
+
+    <!-- collect git commit ID -->
+    <macrodef name="git-commit-id">
+        <attribute name="repository" default="."/>
+        <attribute name="outputproperty"/>
+        <sequential>
+            <local name="git.present"/>
+            <local name="git.revision"/>
+            <local name="git.statusText"/>
+            <local name="git.dirtyString"/>
+            <available file="@{repository}/.git" property="git.present"/>
+            <exec executable="git" dir="@{repository}" outputproperty="git.statusText" failifexecutionfails="false">
+                <arg line="status --porcelain --ignore-submodules=dirty"/>
+            </exec>
+            <exec executable="git" dir="@{repository}" outputproperty="git.revision" failifexecutionfails="false">
+                <arg line="rev-parse --short HEAD"/>
+            </exec>
+            <condition property="git.dirtyString" value="-dirty" else="">
+                <length string="${git.statusText}" trim="yes" when="greater" length="0"/>
+            </condition>
+            <condition property="@{outputproperty}" value="${git.revision}${git.dirtyString}" else="unknown">
+                <and>
+                    <isset property="git.revision"/>
+                    <length string="${git.revision}" trim="yes" when="greater" length="0"/>
+                </and>
+            </condition>
+        </sequential>
+    </macrodef>
+</project>
