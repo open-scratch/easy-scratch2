@@ -52,7 +52,7 @@ import mx.utils.URLUtil;
 
 public class Server implements IServer {
 
-	protected var URLs:Object = {};
+	public var URLs:Object = {};
 
 	public function Server() {
 		setDefaultURLs();
@@ -88,7 +88,7 @@ public class Server implements IServer {
 	}
 
 	protected function getCdnStaticSiteURL():String {
-		return URLs.siteCdnPrefix + URLs.staticFiles;
+		return URLs.assetHost + URLs.staticFiles;
 	}
 
 	// Returns a URL for downloading the JS for an official extension given input like 'myExtension.js'
@@ -103,7 +103,7 @@ public class Server implements IServer {
 		}
 		else {
 			// Skip the CDN when debugging to make iteration easier
-			var extensionSite:String = Capabilities.isDebugger ? URLs.sitePrefix : URLs.siteCdnPrefix;
+			var extensionSite:String = Capabilities.isDebugger ? URLs.sitePrefix : URLs.assetHost;
 			path = extensionSite + URLs.staticFiles + 'js/scratch_extensions/';
 		}
 
@@ -263,7 +263,7 @@ public class Server implements IServer {
 //			whenDone(BackpackPart.localAssets[md5]);
 //			return null;
 //		}
-		var url:String = URLs.assetCdnPrefix + URLs.internalAPI + 'asset/' + md5 + '/get/';
+		var url:String = URLs.assetCdnPrefix + URLs.internalAPI + 'asset/' + md5;
 		return serverGet(url, whenDone);
 	}
 
@@ -343,6 +343,19 @@ public class Server implements IServer {
 		if (lang == '') lang = 'en';
 		sharedObj.data.lang = lang;
 		sharedObj.flush();
+	}
+	public function upload(file:ByteArray, uuid:String, type:Number, completeCallback:Function):void{
+		var url:String = URLs['uploadAPI']+"?&type=" + type;
+		var requestData:URLRequest = new URLRequest(url); 
+		requestData.data = UploadPostHelper.getPostData(uuid, file);
+		requestData.contentType = 'multipart/form-data; boundary=' + UploadPostHelper.getBoundary();
+		requestData.method = URLRequestMethod.POST;
+		requestData.requestHeaders = [new URLRequestHeader("Cache-Control", "no-cache")];
+		var loader:URLLoader = new URLLoader();
+		loader.dataFormat = URLLoaderDataFormat.BINARY;
+		
+		loader.addEventListener(Event.COMPLETE, completeCallback);
+		loader.load(requestData);
 	}
 }
 }

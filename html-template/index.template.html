@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>	
+	<title>scratch2.0在线编辑器</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="./css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="./css/scratch.css">
+</head>
+<body>
+<div class="loading">
+    <p id="percent"></p>
+    <div class="cover"></div>
+</div>
+<div id="dialog" class="dialog">
+	<div class="title-bar">
+		<span class="title">载入项目</span>
+		<a class="pull-right glyphicon glyphicon-remove  btn-sm btn-danger" href="javascript:$('#dialog').fadeOut()" ondragstart="return false;" target="_blank"></a>
+		<a class="pull-right glyphicon glyphicon-refresh  btn-sm btn-success" href="javascript:projectList()" ondragstart="return false" target="_blank"></a>
+	</div>
+	<div class="content">
+	</div>
+</div>
+
+<div id="scratch" style="text-align:center;margin-top:30px;visibility:hidden;position:relative;">
+    <div class="scratch_unsupported">
+        <p style="color:#aaa;font-size:22px;margin-top:14px;line-height:28px;">
+            Flash版本太低或被禁用，请尝试使用IE或Edge浏览器。
+        </p>
+        <a href="http://www.adobe.com/go/getflashplayer">
+            <img src="//www.adobe.com/images/shared/download_buttons/get_flash_player.gif" alt="Get Adobe Flash player" target="_blank" />
+        </a>
+    </div>
+</div>
+
+</body>
+
+<script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="js/swfobject.js"></script>
+<script type="text/javascript" src="js/scratch.js"></script>
+<script type="text/javascript">
+    //Scratch加载进度条
+    var interval = setInterval(function(){
+        var p = window.scratch.PercentLoaded();
+        if (p>=100) {clearInterval(interval);}
+        if (p>0 && p<100) {$(".loading").fadeIn();}
+        console.log(p);
+        $("#percent").html(p + "%");
+        $(".cover").css("width", p + "%");
+    }, 200);
+
+	function GetQueryString(name)
+	{
+	    var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+	    var r = window.location.search.substr(1).match(reg);
+	    if(r!=null)return  decodeURI(r[2]); return null;
+	}
+    
+	$.when(window.SWFready).done(function() {
+		//Scratch准备完毕
+		$(".loading").fadeOut();
+		if(GetQueryString("project")){
+			//从url中取sb2文件地址和项目名加载
+	        window.scratch.loadProject(GetQueryString("project"), GetQueryString("project_name"));
+	    }else{
+            //加载默认项目
+	    	window.scratch.loadProject("project", "未命名");
+	    }
+	});
+
+</script>
+</html>

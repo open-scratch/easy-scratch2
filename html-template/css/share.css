@@ -1,0 +1,63 @@
+.left {
+    float: left;
+}
+
+.right {
+    float: right;
+}
+
+.title {
+    font-size: 2rem;
+    margin: 1rem;
+}
+
+.video-area video {
+    width: 100%;
+}
+
+.views {
+    margin: 20px;
+}
+
+.video-area span {
+    float: right;
+    margin: 10px 10px;
+}
+
+.teacher {
+    margin: 10px 10px;
+}
+
+.review {
+    width: 100%;
+    margin: 20px 0px;
+    display: inline-flex;
+}
+
+.review .avatar img {
+    width: 5rem;
+    height: 5rem;
+    border-radius: 5rem;
+}
+
+.message {
+    width: 80%;
+    /*height: ;*/
+    position: relative;
+    margin: 10px 30px;
+    padding: 10px;
+    background: #f8ac09;
+    border-radius: 5px;
+}
+
+.message:after {
+    content: '';
+    width: 0;
+    height: 0;
+    position: absolute;
+    top: 5px;
+    left: -16px;
+    border: solid 8px;
+    border-color: transparent #f8ac09 transparent transparent;
+    font-size: 0;
+}
