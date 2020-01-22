@@ -103,7 +103,8 @@ public class Server implements IServer {
 		}
 		else {
 			// Skip the CDN when debugging to make iteration easier
-			var extensionSite:String = Capabilities.isDebugger ? URLs.sitePrefix : URLs.assetHost;
+//			var extensionSite:String = Capabilities.isDebugger ? URLs.sitePrefix : URLs.assetHost;
+			var extensionSite:String = URLs.assetHost;
 			path = extensionSite + URLs.staticFiles + 'js/scratch_extensions/';
 		}
 
@@ -263,7 +264,7 @@ public class Server implements IServer {
 //			whenDone(BackpackPart.localAssets[md5]);
 //			return null;
 //		}
-		var url:String = URLs.assetCdnPrefix + URLs.internalAPI + 'asset/' + md5;
+		var url:String = URLs.assetHost + URLs.internalAPI + 'asset/' + md5;
 		return serverGet(url, whenDone);
 	}
 
